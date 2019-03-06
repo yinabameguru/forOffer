@@ -103,4 +103,30 @@ public class All {
         Integer integer = repetitiveNumberWithoutAlter(a);
         System.out.println(integer);
     }
+
+    //面试题4：二维数组中的查找
+    public boolean TwoDimensionSearch(Integer[][] a, Integer seed) {
+        if (Objects.equals(a, null)) return false;
+        Integer outLength = a.length,
+                innerLength = a[0].length,
+                y = outLength - 1,
+                x = 0;
+        while (more(y, 0) && less(x, innerLength)) {
+            if (Objects.equals(a[x][y], seed)) {
+                return true;
+            } else if (less(a[x][y], seed)) {
+                x++;
+            } else {
+                y--;
+            }
+        }
+        return false;
+    }
+
+    @Test
+    public void test4() {
+        Integer[][] a = new Integer[][]{{1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
+        boolean b = TwoDimensionSearch(a, -1);
+        System.out.println(b);
+    }
 }
