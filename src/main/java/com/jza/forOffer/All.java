@@ -4,6 +4,31 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
+
+class ListNode<T> {
+    T t;
+    ListNode<T> next;
+
+    public ListNode<T> add(T t) {
+        ListNode<T> node = new ListNode<>(t);
+        this.next = node;
+        return node;
+    }
+
+    public ListNode(T t) {
+        this.t = t;
+    }
+
+    public ListNode() {}
+
+    @Override
+    public String toString() {
+        return "ListNode{" +
+                "t=" + t +
+                '}';
+    }
+}
 
 public class All {
 
@@ -106,7 +131,7 @@ public class All {
 
     //面试题4：二维数组中的查找
     public boolean TwoDimensionSearch(Integer[][] a, Integer seed) {
-        if (Objects.equals(a, null)) return false;
+        if (Objects.isNull(a)) return false;
         Integer outLength = a.length,
                 innerLength = a[0].length,
                 y = outLength - 1,
@@ -128,5 +153,20 @@ public class All {
         Integer[][] a = new Integer[][]{{1, 2, 8, 9}, {2, 4, 9, 12}, {4, 7, 10, 13}, {6, 8, 11, 15}};
         boolean b = TwoDimensionSearch(a, -1);
         System.out.println(b);
+    }
+
+    //面试题6：从尾到头打印链表
+    public void PrintListReversingly(ListNode head) {
+        Optional.ofNullable(head).ifPresent(node -> {
+            PrintListReversingly(node.next);
+            System.out.println(node);
+        });
+    }
+
+    @Test
+    public void test6() {
+        ListNode<Integer> head = new ListNode<>(1);
+        head.add(2).add(3).add(4).add(5);
+        PrintListReversingly(head);
     }
 }
