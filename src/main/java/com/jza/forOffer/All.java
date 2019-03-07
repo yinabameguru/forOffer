@@ -1,10 +1,9 @@
 package com.jza.forOffer;
 
+import com.sun.imageio.plugins.common.I18N;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 class ListNode<T> {
     T t;
@@ -26,6 +25,39 @@ class ListNode<T> {
     public String toString() {
         return "ListNode{" +
                 "t=" + t +
+                '}';
+    }
+}
+
+class TreeNode<T> {
+    T t;
+    TreeNode left;
+    TreeNode right;
+
+    public TreeNode(T t) {
+        this.t = t;
+    }
+
+    public TreeNode() {}
+
+    public TreeNode addleft() {
+        TreeNode<T> left = new TreeNode<>();
+        this.left = left;
+        return left;
+    }
+
+    public TreeNode addright() {
+        TreeNode<T> right = new TreeNode<>();
+        this.right = right;
+        return right;
+    }
+
+    @Override
+    public String toString() {
+        return "TreeNode{" +
+                "t=" + t +
+                ", left=" + left +
+                ", right=" + right +
                 '}';
     }
 }
@@ -168,5 +200,31 @@ public class All {
         ListNode<Integer> head = new ListNode<>(1);
         head.add(2).add(3).add(4).add(5);
         PrintListReversingly(head);
+    }
+
+    //重建二叉树
+    public TreeNode rebuildTree(Integer[] a1, Integer start1, Integer end1, Integer[] a2, Integer start2, Integer end2) {
+        TreeNode<Integer> cur = new TreeNode<>(a1[start1]);
+        if (Objects.equals(start1, end1)) return cur;
+        for (int i = start2; i <= end2; i++) {
+            if (Objects.equals(a1[start1], a2[i])) {
+            Integer leftLength = i - start2,
+                    rightLength = end2 - i;
+            cur.left = Objects.equals(leftLength, 0) ?
+                    null : rebuildTree(a1, start1 + 1, start1 + leftLength, a2, start2, i - 1);
+            cur.right = Objects.equals(rightLength, 0) ?
+                    null : rebuildTree(a1, end1 - rightLength + 1, end1, a2, i + 1, end2);
+            break;
+            }
+        }
+        return cur;
+    }
+
+    @Test
+    public void test7() {
+        Integer[] a1 = {1, 2, 4, 7, 3, 5, 6, 8};
+        Integer[] a2 = {4, 7, 2, 1, 5, 3, 8, 6};
+        TreeNode head = rebuildTree(a1, 0, a1.length - 1, a2, 0, a2.length - 1);
+        System.out.println(head);
     }
 }
