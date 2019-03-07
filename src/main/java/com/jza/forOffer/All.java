@@ -4,6 +4,7 @@ import com.sun.imageio.plugins.common.I18N;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 class ListNode<T> {
     T t;
@@ -27,6 +28,14 @@ class ListNode<T> {
                 "t=" + t +
                 '}';
     }
+
+    public T getT() {
+        return t;
+    }
+
+    public void setT(T t) {
+        this.t = t;
+    }
 }
 
 class TreeNode<T> {
@@ -40,14 +49,14 @@ class TreeNode<T> {
 
     public TreeNode() {}
 
-    public TreeNode addleft() {
-        TreeNode<T> left = new TreeNode<>();
+    public TreeNode<T> addleft(T t) {
+        TreeNode<T> left = new TreeNode<>(t);
         this.left = left;
         return left;
     }
 
-    public TreeNode addright() {
-        TreeNode<T> right = new TreeNode<>();
+    public TreeNode<T> addright(T t) {
+        TreeNode<T> right = new TreeNode<>(t);
         this.right = right;
         return right;
     }
@@ -60,6 +69,35 @@ class TreeNode<T> {
                 ", right=" + right +
                 '}';
     }
+}
+
+class ParentTreeNode<T> {
+    T t;
+    ParentTreeNode left;
+    ParentTreeNode right;
+    ParentTreeNode parent;
+
+    public ParentTreeNode(T t) {
+        this.t = t;
+    }
+
+    public ParentTreeNode() {}
+
+    public ParentTreeNode<T> addLeft(T t) {
+        ParentTreeNode<T> left = new ParentTreeNode<>(t);
+        this.left = left;
+        left.parent = this;
+        return left;
+    }
+
+    public ParentTreeNode<T> addRight(T t) {
+        ParentTreeNode<T> right = new ParentTreeNode<>(t);
+        this.right = right;
+        right.parent = this;
+        return right;
+    }
+
+
 }
 
 public class All {
@@ -202,7 +240,7 @@ public class All {
         PrintListReversingly(head);
     }
 
-    //重建二叉树
+    //面试题7：重建二叉树
     public TreeNode rebuildTree(Integer[] a1, Integer start1, Integer end1, Integer[] a2, Integer start2, Integer end2) {
         TreeNode<Integer> cur = new TreeNode<>(a1[start1]);
         if (Objects.equals(start1, end1)) return cur;
@@ -226,5 +264,42 @@ public class All {
         Integer[] a2 = {4, 7, 2, 1, 5, 3, 8, 6};
         TreeNode head = rebuildTree(a1, 0, a1.length - 1, a2, 0, a2.length - 1);
         System.out.println(head);
+    }
+
+    //面试题8：二叉树的下一个节点
+    public ParentTreeNode nextTreeNode(ParentTreeNode cur) {
+        if (cur == null) return null ;
+        ParentTreeNode parent = cur.parent;
+        if (Objects.isNull(parent)) {
+            ParentTreeNode right = cur.right;
+            if (Objects.isNull(right)) return null;
+            while (Objects.nonNull(right.left)) right = right.left;
+            return right;
+        }
+        if (Objects.equals(parent.left, cur)) return parent;
+        while (Objects.equals(parent.right, cur)) {
+            cur = parent;
+            parent = parent.parent;
+            if (Objects.isNull(parent)) return null;
+        }
+        return parent;
+    }
+
+    @Test
+    public void test8() {
+        ParentTreeNode<Integer> head = new ParentTreeNode<>(1);
+        head.addLeft(2).addLeft(4).addRight(7);
+        ParentTreeNode<Integer> right = head.addRight(3);
+        right.addLeft(5);
+        right.addRight(6).addLeft(8);
+        ParentTreeNode next1 = nextTreeNode(head);
+        ParentTreeNode next2 = nextTreeNode(head.left);
+        ParentTreeNode next4 = nextTreeNode(head.left.left);
+        ParentTreeNode next7 = nextTreeNode(head.left.left.right);
+        ParentTreeNode next3 = nextTreeNode(right);
+        ParentTreeNode next5 = nextTreeNode(right.left);
+        ParentTreeNode next6 = nextTreeNode(right.right);
+        ParentTreeNode next8 = nextTreeNode(right.right.left);
+        System.out.format("%s, %s, %s, %s, %s, %s, %s, %s", next1, next2, next4, next7, next3, next5, next6, next8);
     }
 }
