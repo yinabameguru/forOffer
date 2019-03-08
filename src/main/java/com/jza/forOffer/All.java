@@ -1,6 +1,7 @@
 package com.jza.forOffer;
 
 import com.sun.imageio.plugins.common.I18N;
+import com.sun.jmx.remote.internal.ArrayQueue;
 import org.junit.Test;
 
 import java.util.*;
@@ -308,17 +309,17 @@ public class All {
         System.out.format("%s, %s, %s, %s, %s, %s, %s, %s", next1, next2, next4, next7, next3, next5, next6, next8);
     }
 
-    //面试题9：用两个栈实现队列
+    //面试题9：T1 用两个栈实现队列
     public class QueueByStack <T> {
         Stack<T> stack1 = new Stack<>();
         Stack<T> stack2 = new Stack<>();
 
-        public QueueByStack <T> add(T t) {
+        public QueueByStack <T> offer(T t) {
             stack1.push(t);
             return this;
         }
 
-        public T remove() {
+        public T poll() {
             if (!stack2.isEmpty()) return stack2.pop();
             if (stack1.isEmpty()) return null;
             while (!stack1.isEmpty()) stack2.push(stack1.pop());
@@ -327,14 +328,58 @@ public class All {
     }
 
     @Test
-    public void test9() {
+    public void test9_1() {
         QueueByStack<Integer> queue = new QueueByStack<>();
-        queue.add(1).add(2).add(3);
-        System.out.println(queue.remove());
-        queue.add(4);
-        queue.remove();
+        queue.offer(1).offer(2).offer(3);
+        System.out.println(queue.poll());
+        queue.offer(4);
+        queue.poll();
         System.out.println(queue.stack1);
         System.out.println(queue.stack2);
+    }
+
+    //面试题9：T2 用两个队列实现一个栈
+    public class StackByQueue <T> {
+        Queue<T> queue1 = new ArrayDeque<>();
+        Queue<T> queue2 = new ArrayDeque<>();
+
+        public StackByQueue<T> push(T t) {
+            if (queue1.isEmpty() && queue2.isEmpty()) queue1.offer(t);
+            else if (queue1.isEmpty()) queue2.offer(t);
+            else queue1.offer(t);
+            return this;
+        }
+
+        public T pop() {
+            if (queue1.isEmpty() && queue2.isEmpty()) return null;
+                T cur;
+            if (queue1.isEmpty()) {
+                cur = queue2.poll();
+                while (!queue2.isEmpty()) {
+                    queue2.offer(cur);
+                    cur = queue2.poll();
+                }
+                return cur;
+            } else {
+                cur = queue1.poll();
+                while (!queue1.isEmpty()) {
+                    queue2.offer(cur);
+                    cur = queue1.poll();
+                }
+                return cur;
+            }
+        }
+    }
+
+    @Test
+    public void test9_2() {
+        StackByQueue<Integer> stack = new StackByQueue<>();
+        stack.push(1).push(2).push(3);
+        System.out.println(stack.queue1);
+        stack.pop();
+        System.out.println(stack.queue2);
+        stack.push(4);
+        System.out.println(stack.queue2);
     }
 
 }
