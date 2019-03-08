@@ -382,4 +382,28 @@ public class All {
         System.out.println(stack.queue2);
     }
 
+    //面试题10：斐波那契数列
+    public Integer fibonacci(Integer n) {
+        if (Objects.equals(n, 0)) return 0;
+        if (Objects.equals(n, 1)) return 1;
+        Integer a = 0, b = 1, c = 1, i = 2;
+        while (i++ <= n) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
+    }
+//    public Integer fibonacci(Integer n) {
+//        if (Objects.equals(n, 0)) return 0;
+//        if (Objects.equals(n, 1)) return 1;
+//        return fibonacci(n - 1) + fibonacci(n - 2);
+//    }
+
+    @Test
+    public void test10() {
+        Integer fibonacci = fibonacci(100);
+        System.out.println(fibonacci);
+    }
+
 }
