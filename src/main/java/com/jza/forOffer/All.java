@@ -21,7 +21,8 @@ class ListNode<T> {
         this.t = t;
     }
 
-    public ListNode() {}
+    public ListNode() {
+    }
 
     @Override
     public String toString() {
@@ -48,7 +49,8 @@ class TreeNode<T> {
         this.t = t;
     }
 
-    public TreeNode() {}
+    public TreeNode() {
+    }
 
     public TreeNode<T> addleft(T t) {
         TreeNode<T> left = new TreeNode<>(t);
@@ -82,7 +84,8 @@ class ParentTreeNode<T> {
         this.t = t;
     }
 
-    public ParentTreeNode() {}
+    public ParentTreeNode() {
+    }
 
     public ParentTreeNode<T> addLeft(T t) {
         ParentTreeNode<T> left = new ParentTreeNode<>(t);
@@ -184,7 +187,7 @@ public class All {
                     mid = mid(left, right);
 
             for (int i = 0; i < length; i++) {
-                if (moreEqual(a[i], left) &&lessEqual(a[i], mid)) {
+                if (moreEqual(a[i], left) && lessEqual(a[i], mid)) {
                     i1++;
                 } else if (more(a[i], mid) && lessEqual(a[i], right)) {
                     i2++;
@@ -252,13 +255,13 @@ public class All {
         if (Objects.equals(start1, end1)) return cur;
         for (int i = start2; i <= end2; i++) {
             if (Objects.equals(a1[start1], a2[i])) {
-            Integer leftLength = i - start2,
-                    rightLength = end2 - i;
-            cur.left = Objects.equals(leftLength, 0) ?
-                    null : rebuildTree(a1, start1 + 1, start1 + leftLength, a2, start2, i - 1);
-            cur.right = Objects.equals(rightLength, 0) ?
-                    null : rebuildTree(a1, end1 - rightLength + 1, end1, a2, i + 1, end2);
-            break;
+                Integer leftLength = i - start2,
+                        rightLength = end2 - i;
+                cur.left = Objects.equals(leftLength, 0) ?
+                        null : rebuildTree(a1, start1 + 1, start1 + leftLength, a2, start2, i - 1);
+                cur.right = Objects.equals(rightLength, 0) ?
+                        null : rebuildTree(a1, end1 - rightLength + 1, end1, a2, i + 1, end2);
+                break;
             }
         }
         return cur;
@@ -274,7 +277,7 @@ public class All {
 
     //面试题8：二叉树的下一个节点
     public ParentTreeNode nextTreeNode(ParentTreeNode cur) {
-        if (cur == null) return null ;
+        if (cur == null) return null;
         ParentTreeNode right = cur.right;
         if (Objects.nonNull(right)) {
             while (Objects.nonNull(right.left)) right = right.left;
@@ -310,11 +313,11 @@ public class All {
     }
 
     //面试题9：T1 用两个栈实现队列
-    public class QueueByStack <T> {
+    public class QueueByStack<T> {
         Stack<T> stack1 = new Stack<>();
         Stack<T> stack2 = new Stack<>();
 
-        public QueueByStack <T> offer(T t) {
+        public QueueByStack<T> offer(T t) {
             stack1.push(t);
             return this;
         }
@@ -339,7 +342,7 @@ public class All {
     }
 
     //面试题9：T2 用两个队列实现一个栈
-    public class StackByQueue <T> {
+    public class StackByQueue<T> {
         Queue<T> queue1 = new ArrayDeque<>();
         Queue<T> queue2 = new ArrayDeque<>();
 
@@ -352,7 +355,7 @@ public class All {
 
         public T pop() {
             if (queue1.isEmpty() && queue2.isEmpty()) return null;
-                T cur;
+            T cur;
             if (queue1.isEmpty()) {
                 cur = queue2.poll();
                 while (!queue2.isEmpty()) {
@@ -404,6 +407,33 @@ public class All {
     public void test10() {
         Integer fibonacci = fibonacci(100);
         System.out.println(fibonacci);
+    }
+
+    //面试题11：旋转数组中的最小数字
+    public Integer rotateArrayMin(Integer[] a) {
+        if (Objects.isNull(a)) return null;
+        Integer length = a.length, start = 0, end = a.length - 1, mid = (start + end) / 2;
+        if (Objects.equals((length), 1)) return a[0];
+        while (less(start, end - 1)) {
+            if (less(a, start, mid)) start = mid;
+            else if (less(a, mid, end)) end = mid;
+            else {
+                while (Objects.equals(a[start], a[mid]) && Objects.equals(a[mid], a[end]) && start < end) start++;
+                return a[start];
+            }
+        }
+        return a[end];
+    }
+
+    @Test
+    public void test11() {
+        Integer[] a = {3, 4, 5, 1, 2};
+        Integer[] a1 = {1, 0, 1, 1, 1};
+        Integer[] a2 = {1, 1, 1, 0, 1};
+        Integer arrayMin = rotateArrayMin(a);
+        Integer arrayMin1 = rotateArrayMin(a1);
+        Integer arrayMin2 = rotateArrayMin(a2);
+        System.out.format("%s, %s, %s", arrayMin, arrayMin1, arrayMin2);
     }
 
 }
