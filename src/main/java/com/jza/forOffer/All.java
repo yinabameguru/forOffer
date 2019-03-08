@@ -97,7 +97,12 @@ class ParentTreeNode<T> {
         return right;
     }
 
-
+    @Override
+    public String toString() {
+        return "ParentTreeNode{" +
+                "t=" + t +
+                '}';
+    }
 }
 
 public class All {
@@ -269,13 +274,13 @@ public class All {
     //面试题8：二叉树的下一个节点
     public ParentTreeNode nextTreeNode(ParentTreeNode cur) {
         if (cur == null) return null ;
-        ParentTreeNode parent = cur.parent;
-        if (Objects.isNull(parent)) {
-            ParentTreeNode right = cur.right;
-            if (Objects.isNull(right)) return null;
+        ParentTreeNode right = cur.right;
+        if (Objects.nonNull(right)) {
             while (Objects.nonNull(right.left)) right = right.left;
             return right;
         }
+        ParentTreeNode parent = cur.parent;
+        if (Objects.isNull(parent)) return null;
         if (Objects.equals(parent.left, cur)) return parent;
         while (Objects.equals(parent.right, cur)) {
             cur = parent;
