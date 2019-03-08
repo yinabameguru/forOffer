@@ -307,4 +307,34 @@ public class All {
         ParentTreeNode next8 = nextTreeNode(right.right.left);
         System.out.format("%s, %s, %s, %s, %s, %s, %s, %s", next1, next2, next4, next7, next3, next5, next6, next8);
     }
+
+    //面试题9：用两个栈实现队列
+    public class QueueByStack <T> {
+        Stack<T> stack1 = new Stack<>();
+        Stack<T> stack2 = new Stack<>();
+
+        public QueueByStack <T> add(T t) {
+            stack1.push(t);
+            return this;
+        }
+
+        public T remove() {
+            if (!stack2.isEmpty()) return stack2.pop();
+            if (stack1.isEmpty()) return null;
+            while (!stack1.isEmpty()) stack2.push(stack1.pop());
+            return stack2.pop();
+        }
+    }
+
+    @Test
+    public void test9() {
+        QueueByStack<Integer> queue = new QueueByStack<>();
+        queue.add(1).add(2).add(3);
+        System.out.println(queue.remove());
+        queue.add(4);
+        queue.remove();
+        System.out.println(queue.stack1);
+        System.out.println(queue.stack2);
+    }
+
 }
