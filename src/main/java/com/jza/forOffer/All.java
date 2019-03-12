@@ -2,6 +2,7 @@ package com.jza.forOffer;
 
 import com.sun.imageio.plugins.common.I18N;
 import com.sun.jmx.remote.internal.ArrayQueue;
+import jdk.nashorn.internal.codegen.Label;
 import org.junit.Test;
 
 import java.util.*;
@@ -412,8 +413,9 @@ public class All {
     //面试题11：旋转数组中的最小数字
     public Integer rotateArrayMin(Integer[] a) {
         if (Objects.isNull(a)) return null;
-        Integer length = a.length, start = 0, end = a.length - 1, mid = (start + end) / 2;
+        Integer length = a.length, start = 0, end = a.length - 1, mid = mid(start, end);
         if (Objects.equals((length), 1)) return a[0];
+        if (less(a, start, end)) return a[end];
         while (less(start, end - 1)) {
             if (less(a, start, mid)) start = mid;
             else if (less(a, mid, end)) end = mid;
@@ -434,6 +436,44 @@ public class All {
         Integer arrayMin1 = rotateArrayMin(a1);
         Integer arrayMin2 = rotateArrayMin(a2);
         System.out.format("%s, %s, %s", arrayMin, arrayMin1, arrayMin2);
+    }
+
+    //面试题12：矩阵中的路径
+    public boolean matrixPath(Character[][] a, Character[] b) {
+        if (Objects.isNull(a) || Objects.isNull(b)) return false;
+        Integer y = 0, x = 0, index = 0, outLength1 = a.length, innerLength1 = a[0].length, length2 = b.length;
+        int[][] flag = new int[outLength1][innerLength1];
+        out:
+        for (y = 0; y < a.length; y++) {
+            for (x = 0; x < a[0].length; x++) {
+                if (Objects.equals(a[y][x], b[0])) break out;
+            }
+        }
+        boolean res = find(a, y, x, outLength1, innerLength1, b, index, length2, flag);
+        return res;
+    }
+
+    private boolean find(Character[][] a, Integer y, Integer x, Integer outLength1, Integer innerLength1, Character[] b, Integer index, Integer length2, int[][] flag) {
+        if (Objects.equals(flag[y][x], 1) || !Objects.equals(a[y][x], b[index])) return false;
+        flag[y][x] = 1;
+        index++;
+        if (Objects.equals(index, length2)) return true;
+        if (less(y, outLength1 - 1) && find(a, y + 1, x, outLength1, innerLength1, b, index, length2, flag)) return true;
+        if (less(x, innerLength1 - 1) && find(a, y, x + 1, outLength1, innerLength1, b, index, length2, flag)) return true;
+        if (more(y, 0) && find(a, y - 1, x, outLength1, innerLength1, b, index, length2, flag)) return true;
+        if (more(x, 0) && find(a, y, x - 1, outLength1, innerLength1, b, index, length2, flag)) return true;
+        flag[x][y] = 0;
+        return false;
+    }
+
+    @Test
+    public void test12() {
+        Character[][] a = {{'a', 'b', 't', 'g'}, {'c', 'f', 'c', 's'}, {'j', 'd', 'e', 'h'}};
+        Character[] b = {'b', 'f', 'c', 'e'};
+        Character[] c = {'a', 'b', 'f', 'b'};
+        boolean b1 = matrixPath(a, b);
+        boolean b2 = matrixPath(a, c);
+        System.out.format("%s, %s", b1, b2);
     }
 
 }
