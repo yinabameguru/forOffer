@@ -146,6 +146,20 @@ public class All {
         return i >= j;
     }
 
+    private static boolean isNull(Object... o) {
+        for (Object item : o) {
+            if (Objects.isNull(item)) return true;
+        }
+        return false;
+    }
+
+    private static boolean nonNull(Object... o) {
+        for (Object item : o) {
+            if (Objects.isNull(item)) return false;
+        }
+        return true;
+    }
+
 
     //面试题3：T1 数组中重复的数字
     public Integer repetitiveNumber(Integer[] a) {
@@ -474,6 +488,44 @@ public class All {
         boolean b1 = matrixPath(a, b);
         boolean b2 = matrixPath(a, c);
         System.out.format("%s, %s", b1, b2);
+    }
+
+    //面试题13：机器人的运动范围
+    public Integer robotMotiveRange(Integer sum, Integer m, Integer n) {
+        if (isNull(sum, m, n)) return null;
+        Integer count = 0, x = 0, y = 0;
+        int [][] flag = new int[m - 1][n - 2];
+        count = check(x, y, sum, count, flag, m, n);
+        return count;
+    }
+
+    private Integer check(Integer x, Integer y, Integer sum, Integer count, int[][] flag, Integer m, Integer n) {
+        if (Objects.equals(flag[y][x], 1)) return count;
+        int cur = 0, x1 = x, y1 = y;
+        while (more(x1, 0) && lessEqual(cur, sum)) {
+            cur += x1 % 10;
+            x1 = x1 / 10;
+        }
+        while (more(y1, 0) && lessEqual(cur, sum)) {
+            cur += y1 % 10;
+            y1 = y1 / 10;
+        }
+        if (more(cur, sum)) return count;
+        flag[y][x] = 1;
+        count++;
+        if (moreEqual(y - 1, 0)) count = check(x, y - 1, sum, count, flag, m, n);
+        if (moreEqual(x - 1, 0)) count = check(x - 1, y, sum, count, flag, m, n);
+        if (lessEqual(y + 1, m)) count = check(x, y + 1, sum, count, flag, m, n);
+        if (lessEqual(x + 1, n)) count = check(x + 1, y, sum, count, flag, m,  n);
+        return count;
+    }
+
+
+
+    @Test
+    public void test13() {
+        Integer integer = robotMotiveRange(2, 9, 9);
+        System.out.println(integer);
     }
 
 }
